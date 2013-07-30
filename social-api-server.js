@@ -37,7 +37,7 @@ app.listen(port, function() {
   console.log("Listening on " + port);
 });
 var callTwitter = function(options, req, res) {
-  var apiUrl = "http://urls.api.twitter.com/1/urls/count.json?callback=TwitterData&url=" + options.url;
+  var apiUrl = "http://urls.api.twitter.com/1/urls/count.json?url=" + options.url;
   request.get(apiUrl)
           .set('Accept', 'application/json')
           .end(function(data){
@@ -46,7 +46,7 @@ var callTwitter = function(options, req, res) {
           });
 }
 var callFB = function(options, req, res){
-  var apiUrl = "https://graph.facebook.com/fql?callback=FacebookData&q=SELECT%20url,%20normalized_url,%20share_count,%20like_count,%20comment_count,%20total_count,commentsbox_count,%20comments_fbid,%20click_count%20FROM%20link_stat%20WHERE%20url='"+options.url+"'";
+  var apiUrl = "https://graph.facebook.com/fql?q=SELECT%20url,%20normalized_url,%20share_count,%20like_count,%20comment_count,%20total_count,commentsbox_count,%20comments_fbid,%20click_count%20FROM%20link_stat%20WHERE%20url='"+options.url+"'";
   request.get(apiUrl)
           .set('Accept', 'application/json')
           .end(function(data){
