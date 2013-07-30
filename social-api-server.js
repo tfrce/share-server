@@ -62,7 +62,9 @@ var callGooglePlus = function(options, req, res){
   var apiUrl = "https://plusone.google.com/_/+1/fastbutton?url=" + options.url;
   request.get(apiUrl)
           .end(function(data){
+            var reg = /__SSR \= \{c\: (.*?)\.0/g
+            var result = reg.exec(data.text);
             console.log(data.text);
-            res.send(data.text);
+            res.send(result);
           });
 }
