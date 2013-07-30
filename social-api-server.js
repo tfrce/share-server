@@ -64,7 +64,12 @@ var callGooglePlus = function(options, req, res){
           .end(function(data){
             var reg = /__SSR \= \{c\: (.*?)\.0/g
             var result = reg.exec(data.text);
-            var count = result[1];
-            res.send({count: count});
+            if(result.length > 1) {
+
+              var count = result[1];
+              res.send({count: count});
+            } else {
+              res.send({count: 0})
+            }
           });
 }
