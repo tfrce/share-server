@@ -2,7 +2,11 @@ var express = require("express");
 var request = require("superagent");
 var app = express();
 app.use(express.logger());
-
+app.all('/*', function(req, res, next) {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Headers", "X-Requested-With");
+  next();
+});
 app.get('/', function(req, res) {
   var options = {};
 	if(typeof req.query.type === 'undefined') {
