@@ -20,6 +20,9 @@ app.get('/', function(req, res) {
     options.url = req.header('Referer');
   }
   switch(options.type) {
+    case 'facebook-event':
+      getFBEvents(options, req, res);
+      break;
     case 'facebook':
       callFB(options, req, res);
       break;
@@ -39,6 +42,22 @@ var port = process.env.PORT || 5000;
 app.listen(port, function() {
   console.log("Listening on " + port);
 });
+var FB = require('fb');
+    var accessToken;
+
+FB.api('oauth/access_token', {
+    client_id: '341203879345622',
+    client_secret: process.env.CLIENTSECRET,
+    grant_type: 'client_credentials'
+}, function (res) {
+    if(!res || res.error) {
+        console.log(!res ? 'error occurred' : res.error);
+        return;
+    }
+    accessToken = res.access_token;
+});
+
+
 var callTwitter = function(options, req, res) {
   var apiUrl = "http://urls.api.twitter.com/1/urls/count.json?url=" + options.url;
   request.get(apiUrl)
@@ -73,3 +92,28 @@ var callGooglePlus = function(options, req, res){
             }
           });
 }
+
+var getFBEvents = function (options,req,res){
+  console.log(options.url + "&method=GET&format=json&access_token=" + accessToken);
+    var https = require('https');
+    var options = {
+      host: 'graph.facebook.com',
+      port: 443,
+      path: options.url + "&method=GET&format=json&access_token=" + accessToken
+    };
+    https.get(options, function(resp){
+      resp.setEncoding('utf8');
+      var chunks = '';
+      resp.on('data', function(chunk){
+        chunks += chunk;
+      });
+
+      resp.on('end', function(){
+        //do something with chunk
+        res.send(JSON.parse(chunks));
+      });
+    }).on("error", function(e){
+      console.log("Got error: " + e.message);
+    });
+}
+
