@@ -26,6 +26,9 @@ app.get('/', function(req, res) {
     case 'twitter':
       callTwitter(options, req, res);
       break;
+    case 'googleplus':
+      callGooglePlus(options, req, res);
+      break;
     default:
       res.send({error: 'Invalid type'});
       
@@ -52,5 +55,14 @@ var callFB = function(options, req, res){
           .end(function(data){
             console.log(data);
             res.send(data.body);
+          });
+}
+
+var callGooglePlus = function(options, req, res){
+  var apiUrl = "https://plusone.google.com/_/+1/fastbutton?url=" + options.url;
+  request.get(apiUrl)
+          .end(function(data){
+            console.log(data.text);
+            res.send(data.text);
           });
 }
