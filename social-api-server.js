@@ -4,6 +4,7 @@ var app = express();
 app.use(express.logger());
 app.all('/*', function(req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");
+  res.setHeader("Expires", new Date(Date.now() + 240000).toUTCString());
   res.header("Access-Control-Allow-Headers", "X-Requested-With");
   next();
 });
